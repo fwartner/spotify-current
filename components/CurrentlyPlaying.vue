@@ -20,11 +20,11 @@
         <h2 class="text-2xl leading-7 font-semibold">
           Currently playing on Spotify:
         </h2>
-        <p>{{ artist }} - {{ currentlyPlaying.name }}</p>
+        <p>{{ artistName }} - {{ track }}</p>
         <img
           class="rounded-lg h-40 w-40"
-          :src="imagePath"
-          :alt="currentlyPlaying.name"
+          :src="imageUrl"
+          :alt="track"
         >
       </div>
     </div>
@@ -32,12 +32,29 @@
 </template>
 
 <script>
-import collect from 'collect.js'
 
-const config = {
+const data = {
+  query: `
+    query {
+      nowPlaying {
+        track {
+          title
+          artists {
+            name
+          }
+          previewUrl
+        }
+        album {
+          imageUrl
+        }
+      }
+    }
+  `
+}
+
+const headers = {
   headers: {
-    Authorization:
-      'Bearer BQCKJwGDen1YuMxCCJZCBgtFTjKxrXUWrx-AcqFxyeV4E_7nghBeZBsxpKlwNjb3naN_vqzilO7EAX7MWmFbB7B4yn2W1dnYiCb4cmw7TYnjXKIh_t9kzvyjKtG4S0KuVhc1vwea7nzoZiNwYhTDp7vcmGvK3vT9p_kKpNc_MZeJ37O_mfYCu2SiUvxfa57JerZg4k6kLMPZZA'
+    'Content-Type': 'application/json'
   }
 }
 
@@ -45,10 +62,10 @@ export default {
   name: 'CurrentlyPlaying',
   data () {
     return {
-      currentlyPlaying: {},
-      album: {},
-      artist: null,
-      imagePath: null
+      track: null,
+      artistName: null,
+      previewUrl: null,
+      imageUrl: null
     }
   },
 
@@ -59,52 +76,19 @@ export default {
   methods: {
     getData () {
       window.setInterval(() => {
-        this.getCurrentlyPlaying()
-        this.getCurrentImage()
-        this.getCurrentArtist()
-      }, 100)
-    },
-
-    getCurrentlyPlaying () {
-      this.$axios
-        .$get(
-          'https://api.spotify.com/v1/me/player/currently-playing?market=DE',
-          config
-        )
-        .then((response) => {
-          this.currentlyPlaying = response.item
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-
-    getCurrentImage () {
-      this.$axios
-        .$get(
-          'https://api.spotify.com/v1/me/player/currently-playing?market=DE',
-          config
-        )
-        .then((response) => {
-          this.imagePath = collect(response.item.album.images).first().url
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-
-    getCurrentArtist () {
-      this.$axios
-        .$get(
-          'https://api.spotify.com/v1/me/player/currently-playing?market=DE',
-          config
-        )
-        .then((response) => {
-          this.artist = collect(response.item.artists).first().name
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+        this.$axios
+          .$post(
+            'https://api.wartner.io', data, headers)
+          .then((response) => {
+            this.track = response.data.nowPlaying.track.title
+            this.artistName = response.data.nowPlaying.track.artists[0].name
+            this.previewUrl = response.data.nowPlaying.track.previewUrl
+            this.imageUrl = response.data.nowPlaying.album.imageUrl
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }, 3000)
     }
   }
 }
