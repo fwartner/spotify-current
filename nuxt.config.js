@@ -15,7 +15,7 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: 'If he listens to music on Spotify you can see what he´s up to!' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=yes' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: 'https://wartner.io/content/images/size/w256h256/2022/09/wartnerio_logo-1.png' }
