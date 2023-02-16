@@ -18,7 +18,7 @@
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
       <div class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg p-6">
         <h2 class="text-2xl leading-7 font-semibold">
-          Currently playing on Spotify:
+          Florian currently listens to
         </h2>
         <p>{{ artistName }} - {{ track }}</p>
         <img class="rounded-lg h-40 w-40" :src="imageUrl" :alt="track">
