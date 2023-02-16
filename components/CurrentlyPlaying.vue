@@ -79,21 +79,22 @@ export default {
     getTimer () {
       window.setInterval(() => {
         this.getData()
-      }, 10000)
+      }, 1000)
     },
 
     getData () {
       this.$axios
         .$post('https://api.wartner.io', data, headers)
         .then((response) => {
-          this.playing = true
+          if (response.data.nowPlaying.track == null) {
+            this.playing = false
+          } else {
+            this.playing = true
+          }
           this.track = response.data.nowPlaying.track.title
           this.artistName = response.data.nowPlaying.track.artists[0].name
           this.previewUrl = response.data.nowPlaying.track.previewUrl
           this.imageUrl = response.data.nowPlaying.album.imageUrl
-        }).else((error) => {
-          this.playing = false
-          console.log(error)
         })
     }
   }
