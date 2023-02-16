@@ -21,18 +21,13 @@
           Currently playing on Spotify:
         </h2>
         <p>{{ artistName }} - {{ track }}</p>
-        <img
-          class="rounded-lg h-40 w-40"
-          :src="imageUrl"
-          :alt="track"
-        >
+        <img class="rounded-lg h-40 w-40" :src="imageUrl" :alt="track">
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
 const data = {
   query: `
     query {
@@ -71,21 +66,25 @@ export default {
 
   mounted () {
     this.getData()
+    this.getTimer()
   },
 
   methods: {
-    getData () {
+    getTimer () {
       window.setInterval(() => {
-        this.$axios
-          .$post(
-            'https://api.wartner.io', data, headers)
-          .then((response) => {
-            this.track = response.data.nowPlaying.track.title
-            this.artistName = response.data.nowPlaying.track.artists[0].name
-            this.previewUrl = response.data.nowPlaying.track.previewUrl
-            this.imageUrl = response.data.nowPlaying.album.imageUrl
-          })
-      }, 300)
+        this.getData()
+      }, 10000)
+    },
+
+    getData () {
+      this.$axios
+        .$post('https://api.wartner.io', data, headers)
+        .then((response) => {
+          this.track = response.data.nowPlaying.track.title
+          this.artistName = response.data.nowPlaying.track.artists[0].name
+          this.previewUrl = response.data.nowPlaying.track.previewUrl
+          this.imageUrl = response.data.nowPlaying.album.imageUrl
+        })
     }
   }
 }
