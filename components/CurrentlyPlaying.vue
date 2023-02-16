@@ -16,12 +16,17 @@
       rel="stylesheet"
     >
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-      <div class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg p-6">
+      <div v-if="playing" class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg p-6">
         <h2 class="text-2xl leading-7 font-semibold">
           Florian currently listens to
         </h2>
         <p>{{ artistName }} - {{ track }}</p>
         <img class="rounded-lg h-40 w-40" :src="imageUrl" :alt="track">
+      </div>
+      <div v-else class="mt-8 bg-white overflow-hidden shadow sm:rounded-lg p-6">
+        <h2 class="text-2xl leading-7 font-semibold">
+          Florian is not listening to anything
+        </h2>
       </div>
     </div>
   </div>
@@ -57,6 +62,7 @@ export default {
   name: 'CurrentlyPlaying',
   data () {
     return {
+      playing: true,
       track: null,
       artistName: null,
       previewUrl: null,
@@ -80,10 +86,14 @@ export default {
       this.$axios
         .$post('https://api.wartner.io', data, headers)
         .then((response) => {
+          this.playing = true
           this.track = response.data.nowPlaying.track.title
           this.artistName = response.data.nowPlaying.track.artists[0].name
           this.previewUrl = response.data.nowPlaying.track.previewUrl
           this.imageUrl = response.data.nowPlaying.album.imageUrl
+        }).else((error) => {
+          this.playing = false
+          console.log(error)
         })
     }
   }
