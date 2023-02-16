@@ -85,9 +85,6 @@ export default {
             this.previewUrl = response.data.nowPlaying.track.previewUrl
             this.imageUrl = response.data.nowPlaying.album.imageUrl
           })
-          .catch((error) => {
-            console.log(error)
-          })
       }, 300)
     }
   }
