@@ -8,6 +8,7 @@
       rel="stylesheet"
     >
     <figure
+      v-if="playing"
       class="md:flex bg-slate-100 rounded-xl p-8 md:p-0 bg-white rounded-md dark:bg-slate-800"
     >
       <img
@@ -35,6 +36,11 @@
         </figcaption>
       </div>
     </figure>
+    <div v-else>
+      <p class="text-lg font-medium bg-white rounded-md p-5">
+        Florian is not listening to anything right now.
+      </p>
+    </div>
   </div>
 </template>
 
